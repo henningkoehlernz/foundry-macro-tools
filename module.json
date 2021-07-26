@@ -1,0 +1,12 @@
+{
+    "name": "macro-tools",
+    "title": "Macro Tools",
+    "description": "Helper classes to simplify macro writing.",
+    "author": "Henning Koehler",
+    "version": "1.0.0",
+    "minimumCoreVersion": "0.4.4",
+    "scripts": [
+        "scripts/attack-table.js",
+        "scripts/input-dialog.js"
+    ]
+}
