@@ -150,9 +150,12 @@ class InputDialog {
         }
         new Dialog(this.data).render(true);
     }
+
 }
 
 // make globally available
-globalThis.AttackTable = AttackTable;
-globalThis.InputDialog = InputDialog;
-console.log("loaded macro tools");
+Hooks.once('ready', function () {
+    globalThis.AttackTable = AttackTable;
+    globalThis.InputDialog = InputDialog;
+    console.log("Macro Tools | Ready");
+});

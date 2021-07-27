@@ -3,8 +3,9 @@
     "title": "Macro Tools",
     "description": "Helper classes to simplify macro writing.",
     "author": "Henning Koehler",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "minimumCoreVersion": "0.4.4",
+    "compatibleCoreVersion": "0.8.8",
     "scripts": [
         "scripts/macro-tools.js"
     ]
