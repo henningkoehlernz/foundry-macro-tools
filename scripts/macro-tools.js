@@ -21,6 +21,24 @@ class AttackTable {
     }
 
     /**
+     * prefix attack formula with '1d20+' if needed
+     * @param {string} attack   attack formula, e.g. '5+2' or '2d20kh+5'
+     * @return {string}         attack formula prefixed with '1d20+' if not containing 'd20'
+     */
+    static prefixAttack(attack) {
+        return attack.toString().includes('d20') ? attack : '1d20+' + attack;
+    }
+
+    /**
+     * wrap formula in [[ ... ]] unless already wrapped
+     * @param {string} formula  formula to wrap, e.g. '2d6+6' or '[[2d6+6]]'
+     * @return {string}         formular wrapped in double brackets if not starting with bracket
+     */
+    static wrapInline(formula) {
+        return formula.startsWith('[') ? formula : '[[' + formula + ']]';
+    }
+
+    /**
      * @param {string} header   optional table header, e.g. "Full Attack"
      */
     constructor(header='') {
@@ -38,22 +56,17 @@ class AttackTable {
      * @param {string} [crit.damage]    extra damage on critical hit (defaults to damage parameter)
      */
     addAttack(name, attack, damage, crit={}) {
-        // fix attack and damage formulas
-        if (!attack.toString().includes('d20'))
-            attack = '1d20+' + attack;
-        if (!damage.startsWith('['))
-            damage = `[[${damage}]]`;
         // create html for attack roll - use Roll object to enable threat checking
         try {
-            let attackRoll = new Roll(attack).evaluate();
+            let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
             const sep = `</td><td>for</td><td style="text-align:right">`;
             this._html += `<tr><td>${name}</td><td>AC `
-                + AttackTable.createInlineRoll(attackRoll) + sep + damage + '</td></tr>';
+                + this.constructor.createInlineRoll(attackRoll) + sep + this.constructor.wrapInline(damage) + '</td></tr>';
             // confirmation roll only shows on a threat
             if (attackRoll.terms[0].total >= (crit.range ?? 20)) {
-                let confirmRoll = new Roll(crit.attack === undefined ? attack : '1d20+' + crit.attack).evaluate();
+                let confirmRoll = new Roll(this.constructor.prefixAttack(crit.attack ?? attack)).evaluate();
                 this._html += '<tr><td>&nbsp;&nbsp;&nbsp;Confirm</td><td>AC '
-                    + AttackTable.createInlineRoll(confirmRoll) + sep + `+${crit.damage ?? damage}</td></tr>`;
+                    + this.constructor.createInlineRoll(confirmRoll) + sep + `+${this.constructor.wrapInline(crit.damage ?? damage)}</td></tr>`;
             }
         } catch(err) {
             console.log('Error in addAttack with parameters:', {
