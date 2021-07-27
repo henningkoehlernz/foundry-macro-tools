@@ -14,8 +14,8 @@ Provides highlighting of natural 1s and 20s, and confirmation rolls conditional 
     let damage = '[[1d12+9]]+[[2d6[sneak attack]]]';
     let crit = { range: 19, damage: '[[2d12+18]]' }; // 19-20/x3 critical
     let table = new AttackTable('Full Attack (Greataxe)');
-    table.addAttack('1st attack', attack_bonus, damage, crit)
-    table.addAttack('2nd attack', attack_bonus - 5, damage, crit)
+    table.addAttack('1st attack', attack_bonus, damage, crit);
+    table.addAttack('2nd attack', attack_bonus - 5, damage, crit);
     table.chat();
 
 ## InputDialog
@@ -32,11 +32,11 @@ Class to simplify creation of a dialog that collects user input.
         let ab = 5 + data.ab;
         let damage = `[[1d10+${6 + data.db}]]`;
         let table = new AttackTable('Attack (Sansetsukon)');
-        table.addAttack('1st attack', ab, damage)
+        table.addAttack('1st attack', ab, damage);
         if (data.button != 'single') {
-            table.addAttack('Flurry', ab, damage)
+            table.addAttack('Flurry', ab, damage);
             if (data.hasted)
-                table.addAttack('Haste', ab, damage)
+                table.addAttack('Haste', ab, damage);
         }
         table.chat();
     });
