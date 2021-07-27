@@ -33,9 +33,9 @@ class AttackTable {
      * @param {string} attack   attack bonus or formula, e.g. "1d20+6+2" or "6+2"
      * @param {string} damage   damage roll formula, e.g. "1d8+5" or "[[1d8+5]]+[[1d6]]"
      * @param {object} crit     critical hit options
-     * @param {int} [crit.range]    minimum roll for threat, e.g. 19 for 19-20 threat range (defaults to 20)
-     * @param {int} [crit.attack]   confirmation bonus or formula (defaults to attack parameter)
-     * @param {int} [crit.damage]   extra damage on critical hit (defaults to damage parameter)
+     * @param {int} [crit.range]        minimum roll for threat, e.g. 19 for 19-20 threat range (defaults to 20)
+     * @param {string} [crit.attack]    confirmation bonus or formula (defaults to attack parameter)
+     * @param {string} [crit.damage]    extra damage on critical hit (defaults to damage parameter)
      */
     addAttack(name, attack, damage, crit={}) {
         // fix attack and damage formulas
@@ -108,10 +108,10 @@ class InputDialog {
 
     /**
      * add an input to the dialog form
-     * @param {string} label    description of expected input, e.g. "Attack Bonus"
-     * @param {string} id       identifier for input, e.g. "ab"
-     * @param {string} value    default value for input (defaults to "", use true/false for checkbox)
-     * @param {string} type     html input type, e.g. "checkbox" (defaults to "text")
+     * @param {string} label        description of expected input, e.g. "Attack Bonus"
+     * @param {string} id           identifier for input, e.g. "ab"
+     * @param {string|bool} value   default value for input (defaults to "", use true/false for checkbox)
+     * @param {string} type         html input type, e.g. "checkbox" (defaults to "text")
      */
     addInput(label, id, value = '', type = 'text') {
         let e_label = `<label for="${id}">${label}</label>`;
