@@ -6,7 +6,6 @@
     "version": "1.0.0",
     "minimumCoreVersion": "0.4.4",
     "scripts": [
-        "scripts/attack-table.js",
-        "scripts/input-dialog.js"
+        "scripts/macro-tools.js"
     ]
 }
