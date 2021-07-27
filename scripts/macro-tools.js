@@ -75,11 +75,12 @@ class AttackTable {
 
     /**
      * send chat message containing attack table
+     * @param {object} speaker  speaker object for message (defaults to selected token)
      */
-    chat() {
+    chat(speaker) {
         ChatMessage.create({
             user: game.user._id,
-            speaker: ChatMessage.getSpeaker({token: actor}),
+            speaker: speaker ?? ChatMessage.getSpeaker(),
             content: this.getHtml()
         });
     }
