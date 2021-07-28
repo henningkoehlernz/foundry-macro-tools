@@ -11,8 +11,8 @@ Provides highlighting of natural 1s and 20s, and confirmation rolls conditional 
 ### Example Usage
 
     let attack_bonus = 12;
-    let damage = '[[1d12+9]]+[[2d6[sneak attack]]]';
-    let crit = { range: 19, damage: '[[2d12+18]]' }; // 19-20/x3 critical
+    let damage = '1d12+9+2d6[sneak attack]';
+    let crit = { range: 19, damage: '2d12+18' }; // 19-20/x3 critical
     let table = new AttackTable('Full Attack (Greataxe)');
     table.addAttack('1st attack', attack_bonus, damage, crit);
     table.addAttack('2nd attack', attack_bonus - 5, damage, crit);
@@ -27,10 +27,10 @@ Class to simplify creation of a dialog that collects user input.
     let d = new InputDialog('Attack Bonuses', { single: 'Single Attack', full: 'Full Attack'});
     d.addInput('Attack Bonus', 'ab', 2);
     d.addInput('Damage Bonus', 'db', 0);
-    d.addInput('Hasted', 'hasted', false, 'checkbox');
+    d.addCheckbox('Hasted', 'hasted', false);
     d.render((data) => {
         let ab = 5 + data.ab;
-        let damage = `[[1d10+${6 + data.db}]]`;
+        let damage = `1d10+${6 + data.db}`;
         let table = new AttackTable('Attack (Sansetsukon)');
         table.addAttack('1st attack', ab, damage);
         if (data.button != 'single') {
