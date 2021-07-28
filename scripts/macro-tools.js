@@ -124,17 +124,26 @@ class InputDialog {
      * add an input to the dialog form
      * @param {string} label        description of expected input, e.g. "Attack Bonus"
      * @param {string} id           identifier for input, e.g. "ab"
-     * @param {string|bool} value   default value for input (defaults to "", use true/false for checkbox)
-     * @param {string} type         html input type, e.g. "checkbox" (defaults to "text")
+     * @param {string} value        default value for input (defaults to "")
+     * @param {string} type         html input type, e.g. "number" (defaults to "text")
      */
     addInput(label, id, value = '', type = 'text') {
         let e_label = `<label for="${id}">${label}</label>`;
-        if (type == 'checkbox') {
+        if (type == 'checkbox')
             this.data.content += `<p><input type="${type}" id="${id}" ${value ? ' checked' : ''}>${e_label}</p>`;
-        }
         else
             this.data.content += `<p>${e_label}<input type="${type}" id="${id}" value="${value}"></p>`;
         this.ids.push(id);
+    }
+
+    /**
+     * add a checkbox to the dialog form
+     * @param {string} label        description of expected input, e.g. "Hasted"
+     * @param {string} id           identifier for input, e.g. "hasted"
+     * @param {bool} checked        whether the checkbox is initially checked (defaults to false)
+     */
+    addCheckbox(label, id, checked = false) {
+        this.addInput(label, id, checked, 'checkbox');
     }
 
     /**
