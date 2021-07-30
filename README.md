@@ -28,7 +28,7 @@ Provides highlighting of natural 1s and 20s, and confirmation rolls conditional 
     table.addAttack(img_claw + ' Claw', 5, '1d6+4');
     table.chat();
 
-<img src="./blob/master/img/natural_attacks.png">
+<img src="./img/natural_attacks.png">
 
 ## InputDialog
 
