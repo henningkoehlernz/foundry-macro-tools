@@ -20,8 +20,8 @@ Provides highlighting of natural 1s and 20s, and confirmation rolls conditional 
 
 ##### With Images:
 
-    let img_bite = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-head.jpg" width="16" height="16">';
-    let img_claw = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-paw-bear.jpg" width="16" height="16">';
+    let img_bite = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-head.jpg" width="20" height="20" style="vertical-align: middle">';
+    let img_claw = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-paw-bear.jpg" width="20" height="20" style="vertical-align: middle">';
     let table = new AttackTable(`Natural Attacks`);
     table.addAttack(img_bite + ' Bite', 5, '1d8+4');
     table.addAttack(img_claw + ' Claw', 5, '1d6+4');
