@@ -80,6 +80,14 @@ class AttackTable {
     }
 
     /**
+     * append a custom row to the attack table
+     * @param {string} text     note text (spans entire row)
+     */
+    addNote(text) {
+        this._html += `<tr><td colspan="4">${text}</td></tr>`;
+    }
+
+    /**
      * @return {string}         html table containing attacks
      */
     getHtml() {

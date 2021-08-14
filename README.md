@@ -18,14 +18,15 @@ Provides highlighting of natural 1s and 20s, and confirmation rolls conditional 
     table.addAttack('2nd attack', attack_bonus - 5, damage, crit);
     table.chat();
 
-##### With Images:
+##### With Images and Note:
 
     let img_bite = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-head.jpg" width="20" height="20" style="vertical-align: middle">';
     let img_claw = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-paw-bear.jpg" width="20" height="20" style="vertical-align: middle">';
     let table = new AttackTable(`Natural Attacks`);
-    table.addAttack(img_bite + ' Bite', 5, '1d8+4');
-    table.addAttack(img_claw + ' Claw', 5, '1d6+4');
-    table.addAttack(img_claw + ' Claw', 5, '1d6+4');
+    table.addAttack(img_bite + ' Bite', 8, '1d8+4');
+    table.addAttack(img_claw + ' Claw', 8, '1d6+4');
+    table.addAttack(img_claw + ' Claw', 8, '1d6+4');
+    table.addNote('Claws also deal 1 bleed on hit.');
     table.chat();
 
 <img src="./img/natural_attacks.png">
