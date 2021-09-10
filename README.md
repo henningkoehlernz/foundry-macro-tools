@@ -18,6 +18,14 @@ Provides highlighting of natural 1s and 20s, and confirmation rolls conditional 
     table.addAttack('2nd attack', attack_bonus - 5, damage, crit);
     table.chat();
 
+Combat maneuver checks can use `addManeuver` (damage is optional):
+
+    let cmb = 13;
+    let damage = '1d6+4'
+    let table = new AttackTable('Grapple');
+    table.addManeuver('', cmb, damage);
+    table.chat();
+
 ##### With Images and Note:
 
     let img_bite = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-head.jpg" width="20" height="20" style="vertical-align: middle">';
