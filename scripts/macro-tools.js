@@ -80,6 +80,33 @@ class AttackTable {
     }
 
     /**
+     * append a single combat maneuver to the attack table
+     * @param {string} name     attack descriptor, e.g. "trip"
+     * @param {string} attack   attack bonus or formula, e.g. "1d20+6+2" or "6+2"
+     * @param {string} damage   damage roll formula, e.g. "1d8+5" or "[[1d8+5]]+[[1d6]]"
+     */
+    addManeuver(name, attack, damage) {
+        // create html for attack roll - use Roll object to enable threat checking
+        try {
+            let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
+            const sep = `</td><td>for</td><td style="text-align:right">`;
+            this._html += `<tr><td>${name}</td><td>CMD ` + this.constructor.createInlineRoll(attackRoll);
+            if (damage) {
+                const sep = `</td><td>for</td><td style="text-align:right">`;
+                this._html += sep + this.constructor.wrapInline(damage);
+            }
+            this._html += '</td></tr>';
+        } catch(err) {
+            console.log('Error in addManeuver with parameters:', {
+                name: name,
+                attack: attack,
+                damage: damage
+            });
+            throw new Error(err);
+        }
+    }
+
+    /**
      * append a custom row to the attack table
      * @param {string} text     note text (spans entire row)
      */
