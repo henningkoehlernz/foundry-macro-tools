@@ -109,7 +109,7 @@ class AttackTable {
         // create html for attack roll - use Roll object to enable threat checking
         try {
             let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
-            this._html += `<tr><td>${name}</td><td>CMD ` + this.constructor.createInlineRoll(attackRoll);
+            this._html += `<tr><td>${name}</td><td>CMD ` + this.constructor.createInlineRoll(attackRoll, true);
             if (damage) {
                 let damageRoll = new Roll(damage).evaluate();
                 this._html += `</td><td>for</td><td style="text-align:right">`
