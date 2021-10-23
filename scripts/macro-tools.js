@@ -34,15 +34,6 @@ class AttackTable {
     }
 
     /**
-     * wrap formula in [[ ... ]] unless already wrapped
-     * @param {string} formula  formula to wrap, e.g. '2d6+6' or '[[2d6+6]]'
-     * @return {string}         formular wrapped in double brackets if not starting with bracket
-     */
-    static wrapInline(formula) {
-        return formula.startsWith('[') ? formula : '[[' + formula + ']]';
-    }
-
-    /**
      * creates html for a button that applies given damage amount to character;
      * relies on PF1 item card mechanism
      * @param {int} damage      damage amount to apply
@@ -50,6 +41,18 @@ class AttackTable {
      */
     static applyDamageButton(damage) {
         return `<button data-action="applyDamage" data-value="${damage}" style="font-size: 12px;padding: 0px 0px;line-height:16px;width:42px">Apply</button>`;
+    }
+
+    /**
+     * creates html for an inline roll and button that applies rolled damage amount to character;
+     * @param {string} damage   damage roll formula, e.g. "1d8+5"
+     * @param {boolean} invert  whether to invert the damage applied (to simulate healing)
+     * @return {string}         html for inline roll and apply damage button
+     */
+    static damageRollAndButton(damage, invert=false) {
+        let damageRoll = new Roll(damage).evaluate();
+        return this.createInlineRoll(damageRoll, false)
+            + this.applyDamageButton(invert ? -damageRoll.total : damageRoll.total);
     }
 
     /**
@@ -73,20 +76,16 @@ class AttackTable {
         // create html for attack roll - use Roll object to enable threat checking
         try {
             let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
-            let damageRoll = new Roll(damage).evaluate();
             const sep = `</td><td>for</td><td style="text-align:right">`;
             this._html += `<tr><td>${name}</td><td>AC `
                 + this.constructor.createInlineRoll(attackRoll, true) + sep
-                + this.constructor.createInlineRoll(damageRoll, false)
-                + this.constructor.applyDamageButton(damageRoll.total) + '</td></tr>';
+                + this.constructor.damageRollAndButton(damage) + '</td></tr>';
             // confirmation roll only shows on a threat
             if (attackRoll.terms[0].total >= (crit.range ?? 20)) {
                 let confirmRoll = new Roll(this.constructor.prefixAttack(crit.attack ?? attack)).evaluate();
-                let critDamageRoll = new Roll(crit.damage ?? damage).evaluate();
                 this._html += '<tr><td>&nbsp;&nbsp;&nbsp;Confirm</td><td>AC '
                     + this.constructor.createInlineRoll(confirmRoll, true) + sep + "+"
-                    + this.constructor.createInlineRoll(critDamageRoll, false)
-                    + this.constructor.applyDamageButton(critDamageRoll.total) + '</td></tr>';
+                    + this.constructor.damageRollAndButton(crit.damage ?? damage) + '</td></tr>';
             }
         } catch(err) {
             console.log('Error in addAttack with parameters:', {
