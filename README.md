@@ -26,8 +26,6 @@ Combat maneuver checks can use `addManeuver` (damage is optional):
     table.addManeuver('', cmb, damage);
     table.chat();
 
-The function `damageRollAndButton` can be used to add custom damage or healing rolls, for use within notes.
-
 ##### With Images and Note:
 
     let img_bite = '<img src="https://assets.forge-vtt.com/bazaar/systems/pf1/assets/icons/items/inventory/monster-head.jpg" width="20" height="20" style="vertical-align: middle">';
