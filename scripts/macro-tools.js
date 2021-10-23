@@ -49,7 +49,7 @@ class AttackTable {
      * @return {string}         html for apply damage button
      */
     static applyDamageButton(damage) {
-        return `<button data-action="applyDamage" data-value="${damage}">Apply</button>`;
+        return `<button data-action="applyDamage" data-value="${damage}" style="font-size: 12px;padding: 0px 0px;line-height:17px;width:42px">Apply</button>`;
     }
 
     /**
@@ -141,7 +141,7 @@ class AttackTable {
     getHtml() {
         // chat-card and card-buttons is needed to make PF1 applyDamage buttons work
         // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/item/entity.js from chatListeners onwards
-        return `<table class="attack-table chat-card card-buttons">${this._html}</table>`;
+        return `<table class="pf1 chat-card card-buttons">${this._html}</table>`;
     }
 
     /**
