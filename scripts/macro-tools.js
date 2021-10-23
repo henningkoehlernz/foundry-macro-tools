@@ -6,17 +6,21 @@ class AttackTable {
 
     /**
      * create html code for an inline roll, with highlighting for natural 1s and 20s
-     * @param {Roll} roll       evaluated Roll object
-     * @return {string}         html code showing roll as inline roll
+     * @param {Roll} roll           evaluated Roll object
+     * @param {boolean} highlight   whether to highlight natural 1s and 20s
+     * @return {string}             html code showing roll as inline roll
      */
-    static createInlineRoll(roll) {
+    static createInlineRoll(roll, highlight) {
         const a = document.createElement('a');
         a.classList.add("inline-roll", "inline-result");
         a.title = Roll.getFormula(roll.terms);
         a.dataset['roll'] = escape(JSON.stringify(roll));
         let rolled = roll.terms[0].total;
-        let style = rolled == 20 ? 'color:green' : rolled == 1 ? 'color:red' : '';
-        a.innerHTML = `<i class="fas fa-dice-d20" style="${style}"></i> ${roll.total}`;
+        if (highlight) {
+            let style = rolled == 20 ? 'color:green' : rolled == 1 ? 'color:red' : '';
+            a.innerHTML = `<i class="fas fa-dice-d20" style="${style}"></i> ${roll.total}`;
+        } else
+            a.innerHTML = `<i class="fas fa-dice-d20"></i> ${roll.total}`;
         return a.outerHTML;
     }
 
@@ -39,18 +43,28 @@ class AttackTable {
     }
 
     /**
+     * creates html for a button that applies given damage amount to character;
+     * relies on PF1 item card mechanism
+     * @param {int} damage      damage amount to apply
+     * @return {string}         html for apply damage button
+     */
+    static applyDamageButton(damage) {
+        return `<button data-action="applyDamage" data-value="${damage}">Apply</button>`;
+    }
+
+    /**
      * @param {string} header   optional table header, e.g. "Full Attack"
      */
     constructor(header='') {
-        this._html = header == '' ? '' : `<tr><th colspan="4" style="text-align:center">${header}</th></tr>`;
+        this._html = header == '' ? '' : `<tr><th colspan="5" style="text-align:center">${header}</th></tr>`;
     }
 
     /**
      * append a single attack to the attack table
-     * @param {string} name     attack descriptor, e.g. "1st attack"
-     * @param {string} attack   attack bonus or formula, e.g. "1d20+6+2" or "6+2"
-     * @param {string} damage   damage roll formula, e.g. "1d8+5" or "[[1d8+5]]+[[1d6]]"
-     * @param {object} crit     critical hit options
+     * @param {string} name             attack descriptor, e.g. "1st attack"
+     * @param {string|int} attack       attack bonus or formula, e.g. "1d20+6+2" or "6+2" or 8
+     * @param {string} damage           damage roll formula, e.g. "1d8+5"
+     * @param {object} crit             critical hit options
      * @param {int} [crit.range]        minimum roll for threat, e.g. 19 for 19-20 threat range (defaults to 20)
      * @param {string} [crit.attack]    confirmation bonus or formula (defaults to attack parameter)
      * @param {string} [crit.damage]    extra damage on critical hit (defaults to damage parameter)
@@ -59,14 +73,20 @@ class AttackTable {
         // create html for attack roll - use Roll object to enable threat checking
         try {
             let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
+            let damageRoll = new Roll(damage).evaluate();
             const sep = `</td><td>for</td><td style="text-align:right">`;
             this._html += `<tr><td>${name}</td><td>AC `
-                + this.constructor.createInlineRoll(attackRoll) + sep + this.constructor.wrapInline(damage) + '</td></tr>';
+                + this.constructor.createInlineRoll(attackRoll, true) + sep
+                + this.constructor.createInlineRoll(damageRoll, false) + '</td><td>'
+                + this.constructor.applyDamageButton(damageRoll.total) + '</td></tr>';
             // confirmation roll only shows on a threat
             if (attackRoll.terms[0].total >= (crit.range ?? 20)) {
                 let confirmRoll = new Roll(this.constructor.prefixAttack(crit.attack ?? attack)).evaluate();
+                let critDamageRoll = new Roll(crit.damage ?? damage).evaluate();
                 this._html += '<tr><td>&nbsp;&nbsp;&nbsp;Confirm</td><td>AC '
-                    + this.constructor.createInlineRoll(confirmRoll) + sep + `+${this.constructor.wrapInline(crit.damage ?? damage)}</td></tr>`;
+                    + this.constructor.createInlineRoll(confirmRoll, true) + sep + "+"
+                    + this.constructor.createInlineRoll(critDamageRoll, false) + '</td><td>'
+                    + this.constructor.applyDamageButton(critDamageRoll.total) + '</td></tr>';
             }
         } catch(err) {
             console.log('Error in addAttack with parameters:', {
@@ -83,17 +103,18 @@ class AttackTable {
      * append a single combat maneuver to the attack table
      * @param {string} name     attack descriptor, e.g. "trip"
      * @param {string} attack   attack bonus or formula, e.g. "1d20+6+2" or "6+2"
-     * @param {string} damage   damage roll formula, e.g. "1d8+5" or "[[1d8+5]]+[[1d6]]"
+     * @param {string} damage   damage roll formula, e.g. "1d8+5"
      */
     addManeuver(name, attack, damage) {
         // create html for attack roll - use Roll object to enable threat checking
         try {
             let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
-            const sep = `</td><td>for</td><td style="text-align:right">`;
             this._html += `<tr><td>${name}</td><td>CMD ` + this.constructor.createInlineRoll(attackRoll);
             if (damage) {
-                const sep = `</td><td>for</td><td style="text-align:right">`;
-                this._html += sep + this.constructor.wrapInline(damage);
+                let damageRoll = new Roll(damage).evaluate();
+                this._html += `</td><td>for</td><td style="text-align:right">`
+                    + this.constructor.createInlineRoll(damageRoll, false) + '</td><td>'
+                    + this.constructor.applyDamageButton(damageRoll.total);
             }
             this._html += '</td></tr>';
         } catch(err) {
@@ -111,14 +132,16 @@ class AttackTable {
      * @param {string} text     note text (spans entire row)
      */
     addNote(text) {
-        this._html += `<tr><td colspan="4">${text}</td></tr>`;
+        this._html += `<tr><td colspan="5">${text}</td></tr>`;
     }
 
     /**
      * @return {string}         html table containing attacks
      */
     getHtml() {
-        return `<table>${this._html}</table>`;
+        // chat-card and card-buttons is needed to make PF1 applyDamage buttons work
+        // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/item/entity.js from chatListeners onwards
+        return `<table class="attack-table chat-card card-buttons">${this._html}</table>`;
     }
 
     /**
