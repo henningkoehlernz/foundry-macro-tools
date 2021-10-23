@@ -49,14 +49,14 @@ class AttackTable {
      * @return {string}         html for apply damage button
      */
     static applyDamageButton(damage) {
-        return `<button data-action="applyDamage" data-value="${damage}" style="font-size: 12px;padding: 0px 0px;line-height:17px;width:42px">Apply</button>`;
+        return `<button data-action="applyDamage" data-value="${damage}" style="font-size: 12px;padding: 0px 0px;line-height:16px;width:42px">Apply</button>`;
     }
 
     /**
      * @param {string} header   optional table header, e.g. "Full Attack"
      */
     constructor(header='') {
-        this._html = header == '' ? '' : `<tr><th colspan="5" style="text-align:center">${header}</th></tr>`;
+        this._html = header == '' ? '' : `<tr><th colspan="4" style="text-align:center">${header}</th></tr>`;
     }
 
     /**
@@ -77,7 +77,7 @@ class AttackTable {
             const sep = `</td><td>for</td><td style="text-align:right">`;
             this._html += `<tr><td>${name}</td><td>AC `
                 + this.constructor.createInlineRoll(attackRoll, true) + sep
-                + this.constructor.createInlineRoll(damageRoll, false) + '</td><td>'
+                + this.constructor.createInlineRoll(damageRoll, false)
                 + this.constructor.applyDamageButton(damageRoll.total) + '</td></tr>';
             // confirmation roll only shows on a threat
             if (attackRoll.terms[0].total >= (crit.range ?? 20)) {
@@ -85,7 +85,7 @@ class AttackTable {
                 let critDamageRoll = new Roll(crit.damage ?? damage).evaluate();
                 this._html += '<tr><td>&nbsp;&nbsp;&nbsp;Confirm</td><td>AC '
                     + this.constructor.createInlineRoll(confirmRoll, true) + sep + "+"
-                    + this.constructor.createInlineRoll(critDamageRoll, false) + '</td><td>'
+                    + this.constructor.createInlineRoll(critDamageRoll, false)
                     + this.constructor.applyDamageButton(critDamageRoll.total) + '</td></tr>';
             }
         } catch(err) {
@@ -113,7 +113,7 @@ class AttackTable {
             if (damage) {
                 let damageRoll = new Roll(damage).evaluate();
                 this._html += `</td><td>for</td><td style="text-align:right">`
-                    + this.constructor.createInlineRoll(damageRoll, false) + '</td><td>'
+                    + this.constructor.createInlineRoll(damageRoll, false)
                     + this.constructor.applyDamageButton(damageRoll.total);
             }
             this._html += '</td></tr>';
@@ -132,7 +132,7 @@ class AttackTable {
      * @param {string} text     note text (spans entire row)
      */
     addNote(text) {
-        this._html += `<tr><td colspan="5">${text}</td></tr>`;
+        this._html += `<tr><td colspan="4">${text}</td></tr>`;
     }
 
     /**
