@@ -55,7 +55,7 @@ Class to simplify creation of a dialog that collects user input.
 
 ### Example Usage
 
-    let d = new InputDialog('Attack Bonuses', { single: 'Single Attack', full: 'Full Attack'});
+    let d = new InputDialog('Attack Bonuses', { single: 'Single Attack', full: 'Full Attack' });
     d.addInput('Attack Bonus', 'ab', 2);
     d.addInput('Damage Bonus', 'db', 0);
     d.addCheckbox('Hasted', 'hasted', false);
