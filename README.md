@@ -18,6 +18,13 @@ Provides highlighting of natural 1s and 20s, and confirmation rolls conditional 
     table.addAttack('2nd attack', attack_bonus - 5, damage, crit);
     table.chat();
 
+Damage rolls are rounded down automatically:
+
+    let table = new AttackTable(`Empowered Scorching Ray`);
+    table.addAttack('1st ray', 10, `(4d6)*1.5`);
+    table.addAttack('2nd ray', 10, `(4d6)*1.5`);
+    table.chat();
+
 Combat maneuver checks can use `addManeuver` (damage is optional):
 
     let cmb = 13;

@@ -10,17 +10,18 @@ class AttackTable {
      * @param {boolean} highlight   whether to highlight natural 1s and 20s
      * @return {string}             html code showing roll as inline roll
      */
-    static createInlineRoll(roll, highlight) {
+    static createInlineRoll(roll, highlight, formula) {
         const a = document.createElement('a');
         a.classList.add("inline-roll", "inline-result");
-        a.title = Roll.getFormula(roll.terms);
+        a.title = formula ? formula : Roll.getFormula(roll.terms);
         a.dataset['roll'] = escape(JSON.stringify(roll));
         let rolled = roll.terms[0].total;
+        let total = Math.floor(roll.total);
         if (highlight) {
             let style = rolled == 20 ? 'color:green' : rolled == 1 ? 'color:red' : '';
-            a.innerHTML = `<i class="fas fa-dice-d20" style="${style}"></i> ${roll.total}`;
+            a.innerHTML = `<i class="fas fa-dice-d20" style="${style}"></i> ${total}`;
         } else
-            a.innerHTML = `<i class="fas fa-dice-d20"></i> ${roll.total}`;
+            a.innerHTML = `<i class="fas fa-dice-d20"></i> ${total}`;
         return a.outerHTML;
     }
 
@@ -51,8 +52,9 @@ class AttackTable {
      */
     static damageRollAndButton(damage, invert=false) {
         let damageRoll = new Roll(damage).evaluate();
-        return this.createInlineRoll(damageRoll, false)
-            + this.applyDamageButton(invert ? -damageRoll.total : damageRoll.total);
+        let total = Math.floor(damageRoll.total);
+        return this.createInlineRoll(damageRoll, false, damage)
+            + this.applyDamageButton(invert ? -total : total);
     }
 
     /**
@@ -110,10 +112,8 @@ class AttackTable {
             let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
             this._html += `<tr><td>${name}</td><td>CMD ` + this.constructor.createInlineRoll(attackRoll, true);
             if (damage) {
-                let damageRoll = new Roll(damage).evaluate();
                 this._html += `</td><td>for</td><td style="text-align:right">`
-                    + this.constructor.createInlineRoll(damageRoll, false)
-                    + this.constructor.applyDamageButton(damageRoll.total);
+                    + this.constructor.damageRollAndButton(damage);
             }
             this._html += '</td></tr>';
         } catch(err) {
