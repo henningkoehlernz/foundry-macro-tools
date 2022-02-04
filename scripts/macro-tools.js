@@ -50,8 +50,8 @@ class AttackTable {
      * @param {boolean} invert  whether to invert the damage applied (to simulate healing)
      * @return {string}         html for inline roll and apply damage button
      */
-    static damageRollAndButton(damage, invert=false) {
-        let damageRoll = new Roll(damage).evaluate();
+    static async damageRollAndButton(damage, invert=false) {
+        let damageRoll = await (new Roll(damage)).evaluate();
         let total = Math.floor(damageRoll.total);
         return this.createInlineRoll(damageRoll, false, damage)
             + this.applyDamageButton(invert ? -total : total);
@@ -74,20 +74,20 @@ class AttackTable {
      * @param {string} [crit.attack]    confirmation bonus or formula (defaults to attack parameter)
      * @param {string} [crit.damage]    extra damage on critical hit (defaults to damage parameter)
      */
-    addAttack(name, attack, damage, crit={}) {
+    async addAttack(name, attack, damage, crit={}) {
         // create html for attack roll - use Roll object to enable threat checking
         try {
-            let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
+            let attackRoll = await (new Roll(this.constructor.prefixAttack(attack))).evaluate();
             const sep = `</td><td>for</td><td style="text-align:right">`;
             this._html += `<tr><td>${name}</td><td>AC `
                 + this.constructor.createInlineRoll(attackRoll, true) + sep
-                + this.constructor.damageRollAndButton(damage) + '</td></tr>';
+                + await this.constructor.damageRollAndButton(damage) + '</td></tr>';
             // confirmation roll only shows on a threat
             if (attackRoll.terms[0].total >= (crit.range ?? 20)) {
-                let confirmRoll = new Roll(this.constructor.prefixAttack(crit.attack ?? attack)).evaluate();
+                let confirmRoll = await (new Roll(this.constructor.prefixAttack(crit.attack ?? attack))).evaluate();
                 this._html += '<tr><td>&nbsp;&nbsp;&nbsp;Confirm</td><td>AC '
                     + this.constructor.createInlineRoll(confirmRoll, true) + sep + "+"
-                    + this.constructor.damageRollAndButton(crit.damage ?? damage) + '</td></tr>';
+                    + await this.constructor.damageRollAndButton(crit.damage ?? damage) + '</td></tr>';
             }
         } catch(err) {
             console.log('Error in addAttack with parameters:', {
@@ -106,14 +106,14 @@ class AttackTable {
      * @param {string} attack   attack bonus or formula, e.g. "1d20+6+2" or "6+2"
      * @param {string} damage   damage roll formula, e.g. "1d8+5"
      */
-    addManeuver(name, attack, damage) {
+    async addManeuver(name, attack, damage) {
         // create html for attack roll - use Roll object to enable threat checking
         try {
-            let attackRoll = new Roll(this.constructor.prefixAttack(attack)).evaluate();
+            let attackRoll = await (new Roll(this.constructor.prefixAttack(attack))).evaluate();
             this._html += `<tr><td>${name}</td><td>CMD ` + this.constructor.createInlineRoll(attackRoll, true);
             if (damage) {
                 this._html += `</td><td>for</td><td style="text-align:right">`
-                    + this.constructor.damageRollAndButton(damage);
+                    + await this.constructor.damageRollAndButton(damage);
             }
             this._html += '</td></tr>';
         } catch(err) {
