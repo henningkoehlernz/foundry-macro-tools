@@ -51,7 +51,11 @@ Combat maneuver checks can use `addManeuver` (damage is optional):
 The function `damageRollAndButton` can be used to add custom damage or healing rolls, for use within notes.
 
     let table = new AttackTable('Lay on Hands');
-    table.addNote('Healing ' + await AttackTable.damageRollAndButton("1d6", true));
+    table.addNote('Healing ' + await AttackTable.damageRollAndButton("1d6", {heal: true}));
+    table.chat();
+
+    let table = new AttackTable('Fireball');
+    table.addNote('Damage (DC 19): ' + await AttackTable.damageRollAndButton("10d6", {half: true}));
     table.chat();
 
 <img src="./img/healing.png">

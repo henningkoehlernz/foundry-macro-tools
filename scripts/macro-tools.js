@@ -38,23 +38,30 @@ class AttackTable {
      * creates html for a button that applies given damage amount to character;
      * relies on PF1 item card mechanism
      * @param {int} damage      damage amount to apply
+     * @param {string} label    button label
      * @return {string}         html for apply damage button
      */
-    static applyDamageButton(damage) {
-        return `<button data-action="applyDamage" data-value="${damage}" style="font-size: 12px;padding: 0px 0px;line-height:16px;width:42px">Apply</button>`;
+    static applyDamageButton(damage, label) {
+        return `<button data-action="applyDamage" data-value="${damage}" style="font-size:12px;padding:0px 0px;line-height:16px;width:42px;margin:2px 0px">${label}</button>`;
     }
 
     /**
      * creates html for an inline roll and button that applies rolled damage amount to character;
-     * @param {string} damage   damage roll formula, e.g. "1d8+5"
-     * @param {boolean} invert  whether to invert the damage applied (to simulate healing)
+     * @param {string} damage               damage roll formula, e.g. "1d8+5"
+     * @param {object} options              output options, e.g. { heal: false, half: true }
+     * @param {boolean} [options.heal]      invert the damage applied to simulate healing
+     * @param {boolean} [options.half]      add apply half button as well
      * @return {string}         html for inline roll and apply damage button
      */
-    static async damageRollAndButton(damage, invert=false) {
+    static async damageRollAndButton(damage, options={}) {
         let damageRoll = await (new Roll(damage)).evaluate();
         let total = Math.floor(damageRoll.total);
-        return this.createInlineRoll(damageRoll, false, damage)
-            + this.applyDamageButton(invert ? -total : total);
+        let result =  this.createInlineRoll(damageRoll, false, damage) + '&hairsp;' + this.applyDamageButton(options.heal ? -total : total, 'Apply');
+        if (options.half) {
+            let halfTotal = Math.floor(total/2);
+            result += this.applyDamageButton(options.heal ? -halfTotal : halfTotal, 'Half');
+        }
+        return result;
     }
 
     /**
