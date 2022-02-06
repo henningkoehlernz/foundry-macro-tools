@@ -46,7 +46,7 @@ Combat maneuver checks can use `addManeuver` (damage is optional):
 
 <img src="./img/natural_attacks.png">
 
-##### Healing:
+##### Healing and Half Damage:
 
 The function `damageRollAndButton` can be used to add custom damage or healing rolls, for use within notes.
 
@@ -54,11 +54,13 @@ The function `damageRollAndButton` can be used to add custom damage or healing r
     table.addNote('Healing ' + await AttackTable.damageRollAndButton("1d6", {heal: true}));
     table.chat();
 
+<img src="./img/healing.png">
+
     let table = new AttackTable('Fireball');
     table.addNote('Damage (DC 19): ' + await AttackTable.damageRollAndButton("10d6", {half: true}));
     table.chat();
 
-<img src="./img/healing.png">
+<img src="./img/apply_half.png">
 
 ## InputDialog
 
