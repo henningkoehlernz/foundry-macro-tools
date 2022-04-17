@@ -58,7 +58,7 @@ The function `damageRollAndButton` can be used to add custom damage or healing r
 
     let table = new AttackTable('Fireball');
     table.addNote('Damage: ' + await AttackTable.damageRollAndButton("10d6", {half: true}));
-    table.addNote('<button data-action="save" data-type="ref">Reflex Save DC 19 for half</button>');
+    table.addSavingThrow('ref', 'Reflex Save DC 19 for half');
     table.chat();
 
 <img src="./img/apply_half.png">
