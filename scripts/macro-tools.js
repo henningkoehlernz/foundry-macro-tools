@@ -35,6 +35,15 @@ class AttackTable {
     }
 
     /**
+     * returns CSS style string for buttons
+     * @param {int} width   button width in px
+     * @return {string}     CSS style string
+     */
+    static button_style(width) {
+        return "font-size:12px;padding:0px 0px;line-height:16px;margin:2px 0px" + (width ? `;width:${width}px` : '');
+    }
+
+    /**
      * creates html for a button that applies given damage amount to character;
      * relies on PF1 item card mechanism
      * @param {int} damage      damage amount to apply
@@ -44,21 +53,39 @@ class AttackTable {
     static applyDamageButton(damage, label) {
         // inline-action and chat-card are needed to make PF1 applyDamage buttons work
         // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/item/entity.js from chatListeners onwards
-        return `<button class="inline-action chat-card" data-action="applyDamage" data-value="${damage}" style="font-size:12px;padding:0px 0px;line-height:16px;width:42px;margin:2px 0px">${label}</button>`;
+        return `<button class="inline-action chat-card" data-action="applyDamage" data-value="${damage}" style="${this.button_style(42)}">${label}</button>`;
+    }
+
+    /**
+     * creates html for a button that causes selected actors to roll a saving throw
+     * relies on PF1 actor mechanism
+     * @param {string} type     fort, ref or will
+     * @param {string} label    button label
+     * @param {int} width       button width in px
+     * @return {string}         html for saving throw button
+     */
+    static saveButton(type, label, width) {
+        // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/actor/entity.js from chatListeners onwards
+        return `<button data-action="save" data-type="${type}" style="${this.button_style(width)}">${label}</button>`;
     }
 
     /**
      * creates html for an inline roll and button that applies rolled damage amount to character;
      * @param {string} damage               damage roll formula, e.g. "1d8+5"
-     * @param {object} options              output options, e.g. { heal: false, half: true }
+     * @param {object} options              output options, e.g. { heal: false, half: true, save: "ref" }
      * @param {boolean} [options.heal]      invert the damage applied to simulate healing
      * @param {boolean} [options.half]      add apply half button as well
+     * @param {string} [options.save]       add saving throw button as well (fort|ref|will)
      * @return {string}         html for inline roll and apply damage button
      */
     static async damageRollAndButton(damage, options={}) {
         let damageRoll = await (new Roll(damage)).evaluate();
         let total = Math.floor(damageRoll.total);
-        let result =  this.createInlineRoll(damageRoll, false, damage) + '&hairsp;' + this.applyDamageButton(options.heal ? -total : total, 'Apply');
+        let result =  this.createInlineRoll(damageRoll, false, damage) + '&hairsp;';
+        if (options.save) {
+            result += this.saveButton(options.save, "Save", 42);
+        }
+        result += this.applyDamageButton(options.heal ? -total : total, 'Apply');
         if (options.half) {
             let halfTotal = Math.floor(total/2);
             result += this.applyDamageButton(options.heal ? -halfTotal : halfTotal, 'Half');
@@ -141,15 +168,6 @@ class AttackTable {
      */
     addNote(text) {
         this._html += `<tr><td colspan="4">${text}</td></tr>`;
-    }
-
-    /**
-     * append a saving throw button to the attack table
-     * @param {string} type     fort, ref or will
-     * @param {string} label    button label
-     */
-    addSavingThrow(type, label) {
-        this._html += `<tr><td colspan="4"><button data-action="save" data-type="${type}">${label}</button></td></tr>`;
     }
 
     /**

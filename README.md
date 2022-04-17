@@ -46,7 +46,7 @@ Combat maneuver checks can use `addManeuver` (damage is optional):
 
 <img src="./img/natural_attacks.png">
 
-##### Healing and Half Damage:
+##### Healing, Half Damage and Saving Throws:
 
 The function `damageRollAndButton` can be used to add custom damage or healing rolls, for use within notes.
 
@@ -56,9 +56,8 @@ The function `damageRollAndButton` can be used to add custom damage or healing r
 
 <img src="./img/healing.png">
 
-    let table = new AttackTable('Fireball');
-    table.addNote('Damage: ' + await AttackTable.damageRollAndButton("10d6", {half: true}));
-    table.addSavingThrow('ref', 'Reflex Save DC 19 for half');
+    let table = new AttackTable('Fireball (DC 19)');
+    table.addNote('Damage: ' + await AttackTable.damageRollAndButton("10d6", {half: true, save: "ref"}));
     table.chat();
 
 <img src="./img/apply_half.png">
