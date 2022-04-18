@@ -36,11 +36,11 @@ class AttackTable {
 
     /**
      * returns CSS style string for buttons
-     * @param {int} width   button width in px
+     * @param {int} width   button width
      * @return {string}     CSS style string
      */
     static button_style(width) {
-        return "font-size:12px;padding:0px 0px;line-height:16px;margin:2px 0px" + (width ? `;width:${width}px` : '');
+        return `padding:1px 4px;line-height:normal;width:${width ? width : 'auto'};margin:2px 0px`;
     }
 
     /**
@@ -53,7 +53,7 @@ class AttackTable {
     static applyDamageButton(damage, label) {
         // inline-action and chat-card are needed to make PF1 applyDamage buttons work
         // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/item/entity.js from chatListeners onwards
-        return `<button class="inline-action chat-card" data-action="applyDamage" data-value="${damage}" style="${this.button_style(42)}">${label}</button>`;
+        return `<button class="inline-action chat-card" data-action="applyDamage" data-value="${damage}" style="${this.button_style()}">${label}</button>`;
     }
 
     /**
@@ -61,7 +61,7 @@ class AttackTable {
      * relies on PF1 actor mechanism
      * @param {string} type     fort, ref or will
      * @param {string} label    button label
-     * @param {int} width       button width in px
+     * @param {int} width       button width
      * @return {string}         html for saving throw button
      */
     static saveButton(type, label, width) {
@@ -83,7 +83,7 @@ class AttackTable {
         let total = Math.floor(damageRoll.total);
         let result =  this.createInlineRoll(damageRoll, false, damage) + '&hairsp;';
         if (options.save) {
-            result += this.saveButton(options.save, "Save", 42);
+            result += this.saveButton(options.save, "Save");
         }
         result += this.applyDamageButton(options.heal ? -total : total, 'Apply');
         if (options.half) {
