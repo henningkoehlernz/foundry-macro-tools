@@ -40,7 +40,7 @@ class AttackTable {
      * @return {string}     CSS style string
      */
     static button_style(width) {
-        return `padding:1px 4px;line-height:normal;width:${width ? width : 'auto'};margin:2px 0px`;
+        return `padding:1px 4px;line-height:normal;width:${width ? width : 'auto'};margin:-2px 0px`;
     }
 
     /**
