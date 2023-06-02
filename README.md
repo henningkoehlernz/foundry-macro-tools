@@ -72,10 +72,11 @@ Class to simplify creation of a dialog that collects user input.
     d.addInput('Attack Bonus', 'ab', 2);
     d.addInput('Damage Bonus', 'db', 0);
     d.addCheckbox('Hasted', 'hasted', false);
+    d.addSelect('Weapon', 'weapon', ['fists', 'staff']);
     d.render(async (data) => {
         let ab = 5 + data.ab;
-        let damage = `1d10+${6 + data.db}`;
-        let table = new AttackTable('Attack (Sansetsukon)');
+        let damage = `1d6+${4 + data.db}`;
+        let table = new AttackTable(`Attack (${data.weapon})`);
         await table.addAttack('1st attack', ab, damage);
         if (data.button != 'single') {
             await table.addAttack('Flurry', ab, damage);

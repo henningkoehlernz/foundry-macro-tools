@@ -238,6 +238,22 @@ class InputDialog {
     }
 
     /**
+     * add a select box to the dialog form
+     * @param {string} label        description of expected input, e.g. "Weapon"
+     * @param {string} id           identifier for input, e.g. "weapon"
+     * @param {options} checked     list of values to select from, e.g. ["sword", "axe"]
+     */
+    addSelect(label, id, options) {
+        let e_label = `<label for="${id}">${label} </label>`;
+        this.data.content += `<p>${e_label}<select id="${id}">`;
+        for (let opt of options) {
+            this.data.content += `<option>${opt}</option>`;
+        }
+        this.data.content += '</select></p>';
+        this.ids.push(id);
+    }
+
+    /**
      * render dialog and evoke callback function when done
      * @param {Function} callback   function to be called when button is pressed
      *                              receives object mapping id values to user inputs and 'button' to the id of the button pressed
