@@ -57,10 +57,14 @@ The function `damageRollAndButton` can be used to add custom damage or healing r
 <img src="./img/healing.png">
 
     let table = new AttackTable('Fireball (DC 19)');
-    table.addNote('Damage: ' + await AttackTable.damageRollAndButton("10d6", {half: true, save: "ref"}));
+    table.addNote('Damage: ' + await AttackTable.damageRollAndButton("10d6", {half: true, save: "ref", dc: 19}));
     table.chat();
 
 <img src="./img/apply_half.png">
+
+    let table = new AttackTable('Coup de Grace');
+    table.addNote('Damage: ' + await AttackTable.damageRollAndButton("2d4+2", {save: "fort", dc: dmg => 10 + dmg}));
+    table.chat();
 
 ## InputDialog
 

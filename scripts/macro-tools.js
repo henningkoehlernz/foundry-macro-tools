@@ -61,18 +61,29 @@ class AttackTable {
      * relies on PF1 actor mechanism
      * @param {string} type     fort, ref or will
      * @param {string} label    button label
+     * @param {int} dc          difficulty level
      * @param {int} width       button width
      * @return {string}         html for saving throw button
      */
-    static saveButton(type, label, width) {
+    static saveButton(type, label, dc, width) {
         // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/actor/entity.js from chatListeners onwards
-        return `<button data-action="save" data-type="${type}" style="${this.button_style(width)}">${label}</button>`;
+        return `<button data-action="save" data-type="${type}" data-dc="${dc}" style="${this.button_style(width)}">${label}</button>`;
+    }
+
+    /**
+     * evaluates function fn(arg), treating non-functions as constants
+     * @param {Function|value} fn   function to evaluate
+     * @param {value} arg           argument used to evaluate function
+     * @return {value}              fn(arg) or simply fn
+     */
+    static evalConst(fn, arg) {
+        return fn instanceof Function ? fn(arg) : fn;
     }
 
     /**
      * creates html for an inline roll and button that applies rolled damage amount to character;
      * @param {string} damage               damage roll formula, e.g. "1d8+5"
-     * @param {object} options              output options, e.g. { heal: false, half: true, save: "ref" }
+     * @param {object} options              output options, e.g. { heal: false, half: true, save: "ref", dc: roll => 10 + roll }
      * @param {boolean} [options.heal]      invert the damage applied to simulate healing
      * @param {boolean} [options.half]      add apply half button as well
      * @param {string} [options.save]       add saving throw button as well (fort|ref|will)
@@ -83,7 +94,7 @@ class AttackTable {
         let total = Math.floor(damageRoll.total);
         let result =  this.createInlineRoll(damageRoll, false, damage) + '&hairsp;';
         if (options.save) {
-            result += this.saveButton(options.save, "Save");
+            result += this.saveButton(options.save, "Save", this.evalConst(options.dc, total));
         }
         result += this.applyDamageButton(options.heal ? -total : total, 'Apply');
         if (options.half) {
