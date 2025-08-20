@@ -40,7 +40,7 @@ class AttackTable {
      * @return {string}     CSS style string
      */
     static button_style(width) {
-        return `padding:1px 4px;line-height:normal;width:${width ? width : 'auto'};margin:-2px 0px`;
+        return `padding:1px 4px;width:${width ? width : 'auto'}`;
     }
 
     /**
@@ -51,9 +51,7 @@ class AttackTable {
      * @return {string}         html for apply damage button
      */
     static applyDamageButton(damage, label) {
-        // inline-action and chat-card are needed to make PF1 applyDamage buttons work
-        // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/item/entity.js from chatListeners onwards
-        return `<button class="inline-action chat-card" data-action="applyDamage" data-value="${damage}" style="${this.button_style()}">${label}</button>`;
+        return `<a data-action="applyDamage" data-value="${damage}" style="${this.button_style()}">${label}</a>`;
     }
 
     /**
@@ -66,8 +64,7 @@ class AttackTable {
      * @return {string}         html for saving throw button
      */
     static saveButton(type, label, dc, width) {
-        // see https://gitlab.com/Furyspark/foundryvtt-pathfinder1/-/blob/master/module/actor/entity.js from chatListeners onwards
-        return `<button data-action="save" data-type="${type}" data-dc="${dc}" style="${this.button_style(width)}">${label}</button>`;
+        return `<a data-action="save" data-type="${type}" data-dc="${dc}" style="${this.button_style(width)}">${label}</a>`;
     }
 
     /**
@@ -185,7 +182,7 @@ class AttackTable {
      * @return {string}         html table containing attacks
      */
     getHtml() {
-        return `<table class="pf1">${this._html}</table>`;
+        return `<table style="margin:0">${this._html}</table>`;
     }
 
     /**
